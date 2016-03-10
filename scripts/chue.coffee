@@ -19,9 +19,9 @@ module.exports = (robot) ->
     return
 
   robot.respond /chue alert\s+(\d+)\s+(\d+)|chue alert\s+(\d+)|chue alert/i, (msg) ->
-    lamp = if msg.match[1] is undefined then "all" else msg.match[1]
+    lamp = if msg.match[1] is undefined then "" else "/" + msg.match[1]
     timeout = msg.match[2] || msg.match[3] || 5502
-    robot.http("#{chueURL}alert?timeout=#{timeout}")
+    robot.http("#{chueURL}alert#{lamp}?timeout=#{timeout}")
         .get() (err, res, body) ->
             if res.statusCode == 200
               msg.emote "Blinking hue lamps at CH"
@@ -29,8 +29,8 @@ module.exports = (robot) ->
               msg.emote "Sorry... " + body
 
   robot.respond /chue random ?(\d+)?/i, (msg) ->
-    lamp = if msg.match[1] is undefined then "all" else msg.match[1]
-    robot.http("#{chueURL}random/#{lamp}")
+    lamp = if msg.match[1] is undefined then "" else "/" + msg.match[1]
+    robot.http("#{chueURL}random#{lamp}")
         .get() (err, res, body) ->
             if res.statusCode == 200
               msg.emote body
@@ -38,8 +38,8 @@ module.exports = (robot) ->
               msg.emote "Sorry... " + body
 
   robot.respond /chue colou?rloop ?(\d+)?/i, (msg) ->
-    lamp = if msg.match[1] is undefined then "all" else msg.match[1]
-    robot.http("#{chueURL}colorloop/#{lamp}")
+    lamp = if msg.match[1] is undefined then "" else "/" + msg.match[1]
+    robot.http("#{chueURL}colorloop#{lamp}")
         .get() (err, res, body) ->
             if res.statusCode == 200
               msg.emote "Put on a colourloop at CH"
@@ -47,9 +47,8 @@ module.exports = (robot) ->
               msg.emote "Sorry... " + body
 
   robot.respond /chue strobe ?(\d+)*/i, (msg) ->
-    lamp = "all"
     duration = if msg.match[1] is undefined then "" else "?duration=" + msg.match[1]
-    robot.http("#{chueURL}strobe/#{lamp}" + duration)
+    robot.http("#{chueURL}strobe" + duration)
         .get() (err, res, body) ->
             if res.statusCode == 200
               msg.emote "Flashed for every one at CH"
@@ -57,10 +56,10 @@ module.exports = (robot) ->
               msg.emote "Sorry... " + body
 
   robot.respond /chue colou?r (\d+)? ?#?(.*)/i, (msg) ->
-    lamp = if msg.match[1] is undefined then "all" else msg.match[1]
+    lamp = if msg.match[1] is undefined then "" else "/" + msg.match[1]
     colour = msg.match[2]
 
-    robot.http("#{chueURL}color/#{lamp}/#{colour}")
+    robot.http("#{chueURL}color/#{colour}#{lamp}")
         .get() (err, res, body) ->
             if res.statusCode == 200
               msg.emote body
