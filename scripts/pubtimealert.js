@@ -30,7 +30,7 @@ module.exports = function(robot) {
     const todaysStartTime = now.getTime();
 
     try {
-      const calendar = await fetch('http://pub.etv.tudelft.nl/ical/feed/all');
+      const calendar = await fetch('https://pub.etv.tudelft.nl/ical/feed/all');
       const calendarEvents = ical.parseICS(await calendar.text());
 
       const event = Object.values(calendarEvents)
